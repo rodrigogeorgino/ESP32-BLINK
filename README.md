@@ -43,6 +43,9 @@ Para compilar e enviar os códigos para a sua placa ESP-32, certifique-se de pos
 
 ---
 
+<img width="422" height="219" alt="image" src="https://github.com/user-attachments/assets/1c1cbdad-7db0-4e1c-80b7-9d648e77e6ad" />
+
+
 ## 👤 Autoria e Supervisão
 
 Material adaptado e mantido sob a supervisão do **Prof. Georgino, Rodrigo (IoT)** para fins educacionais e difusão do movimento *maker*.
