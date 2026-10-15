@@ -7,6 +7,8 @@ Bem-vindo ao repositório oficial do material prático de **Internet das Coisas 
 Este repositório contém todo o conteúdo teórico, diagramas de pinagem, esquemas de montagem e códigos-fonte desenvolvidos para guiar estudantes, hobistas e *makers* no aprendizado prático de automação residencial e sistemas embarcados utilizando a placa **ESP-32**.
 
 ---
+<img width="1307" height="503" alt="image" src="https://github.com/user-attachments/assets/c34b31cd-aaf3-4dcd-a6ca-c045d4fd782d" />
+
 
 ## 🛠️ Conteúdo do Repositório
 
