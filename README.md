@@ -9,6 +9,9 @@ Este repositório contém todo o conteúdo teórico, diagramas de pinagem, esque
 ---
 <img width="1307" height="503" alt="image" src="https://github.com/user-attachments/assets/c34b31cd-aaf3-4dcd-a6ca-c045d4fd782d" />
 
+# Vídeo sobre o Blink 
+ Para saber mais sobre o Blink(EN):
+ https://youtu.be/-bZp36zWQ1Y?si=SqbE0NxzqnNdnNP1
 
 ## 🛠️ Conteúdo do Repositório
 
@@ -44,6 +47,10 @@ Para compilar e enviar os códigos para a sua placa ESP-32, certifique-se de pos
 5. Faça o upload do código para a placa (pressionando o botão **BOOT** do ESP-32 caso necessário durante a mensagem de *Connecting*).
 
 ---
+# Vídeo sobre o Blink 
+ https://youtu.be/-bZp36zWQ1Y?si=SqbE0NxzqnNdnNP1
+ <img width="1053" height="476" alt="image" src="https://github.com/user-attachments/assets/d03e055f-bcdf-4eec-9eee-752495d84480" />
+
 
 ---
      1. LED (Diodo Emissor de Luz):
