@@ -43,6 +43,45 @@ Para compilar e enviar os códigos para a sua placa ESP-32, certifique-se de pos
 
 ---
 
+---
+     1. LED (Diodo Emissor de Luz):
+     Anodo (+) ----|>|---- Catodo (-)
+                    ▲
+                    │ (Emissão de Luz)
+      2. Resistor:
+     -------/\/\/\-------
+          ( 1kΩ )
+
+    3. Protoboard (Visão Interna das Trilhas):
+     +-----------------------------------------+
+     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Trilhas de Alimentação (+)
+     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Trilhas de Alimentação (-)
+     |-----------------------------------------|
+     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Linhas Verticais (A-E)
+     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Linhas Verticais (F-J)
+     +-----------------------------------------+
+
+     4. Jumper (Cabo de Conexão):
+     [Pino ESP32] ===== (Jumper Macho-Macho) ===== [Protoboard]
+
+     ==================================================
+         EXEMPLO DE CIRCUITO (LED + ESP32)
+     ==================================================
+
+     +-------------+
+     |   ESP-32    |
+     |             |
+     |    GPIO32 --+---(Jumper)---> [ Resistor 1kΩ ] ---> [ Anodo (+) LED ]
+     |             |                                            |
+     |       GND --+---(Jumper)-------------------------------> [ Catodo (-) LED ]
+     +-------------+
+
+ 
+     +-------------+
+
+     
+---
+
 <img width="422" height="219" alt="image" src="https://github.com/user-attachments/assets/1c1cbdad-7db0-4e1c-80b7-9d648e77e6ad" />
 
 
