@@ -1,3 +1,11 @@
+//Projeto 1: Sequencial de LEDs
+//Controlaremos três LEDs (Vermelho, Amarelo e Verde) utilizando o aplicativo Blynk via Wi-Fi.
+/*
+LED Vermelho: Porta digital D32 (com resistor de 1kΩ). Pino Virtual: V0.
+LED Amarelo: Porta digital D26 (com resistor de 1kΩ). Pino Virtual: V1.
+LED Verde: Porta digital D13 (com resistor de 1kΩ). Pino Virtual: V2.
+
+*/  
 #define BLYNK_PRINT Serial
 #define BLYNK_DEVICE_NAME "Prof Georgino Rodrigo IoT"
 #define BLYNK_TEMPLATE_ID "SEU_TEMPLATE_ID"
