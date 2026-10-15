@@ -78,7 +78,33 @@ Para compilar e enviar os códigos para a sua placa ESP-32, certifique-se de pos
 
  
      +-------------+
+     ==================================================
+              BOTÃO (PUSH-BUTTON)
+     ==================================================
 
+     1. Esquema Físico do Botão Táctil (4 Terminais):
+         Terminal 1 o-------o Terminal 2
+                    |       |
+                    |   +   |  <-- Pressionar fecha o contato interno
+                    |       |
+         Terminal 3 o-------o Terminal 4
+
+
+     2. Exemplo de Circuito de Botão com Pull-up Interno no ESP-32:
+         
+         +----------------------------------+
+         |              ESP-32              |
+         |                                  |
+         |                     3V3 ---+     |
+         |                            |     |
+         |                          [10kΩ]  |  <-- Resistor de Pull-up (Opcional)
+         |                            |     |
+         |                 GPIO 23 ---+-----o (Terminal 1 do Botão)
+         |                            |     
+         |                            +-----o (Terminal 3 do Botão)
+         |                                  |
+         |                         GND -----+
+         +----------------------------------+
      
 ---
 
