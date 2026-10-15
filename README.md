@@ -47,66 +47,84 @@ Para compilar e enviar os códigos para a sua placa ESP-32, certifique-se de pos
 
 ---
      1. LED (Diodo Emissor de Luz):
-     Anodo (+) ----|>|---- Catodo (-)
-                    ▲
-                    │ (Emissão de Luz)
-      2. Resistor:
-     -------/\/\/\-------
-          ( 1kΩ )
+                    
+                    
+                    Anodo (+) ----|>|---- Catodo (-)
+                                   ▲
+                                   │ (Emissão de Luz)
+                   
+     2. Resistor:
+                    
+                    -------/\/\/\-------
+                         ( 1kΩ )
 
+    
     3. Protoboard (Visão Interna das Trilhas):
-     +-----------------------------------------+
-     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Trilhas de Alimentação (+)
-     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Trilhas de Alimentação (-)
-     |-----------------------------------------|
-     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Linhas Verticais (A-E)
-     | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Linhas Verticais (F-J)
-     +-----------------------------------------+
 
+                    
+                    +-----------------------------------------+
+                    | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Trilhas de Alimentação (+)
+                    | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Trilhas de Alimentação (-)
+                    |-----------------------------------------|
+                    | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Linhas Verticais (A-E)
+                    | [ ] [ ] [ ] [ ] [ ]   [ ] [ ] [ ] [ ] [ ] | <-- Linhas Verticais (F-J)
+                    +-----------------------------------------+
+
+
+     
+     
      4. Jumper (Cabo de Conexão):
-     [Pino ESP32] ===== (Jumper Macho-Macho) ===== [Protoboard]
+     
+               
+                    [Pino ESP32] ===== (Jumper Macho-Macho) ===== [Protoboard]
 
+   
+     
      ==================================================
          EXEMPLO DE CIRCUITO (LED + ESP32)
      ==================================================
 
-     +-------------+
-     |   ESP-32    |
-     |             |
-     |    GPIO32 --+---(Jumper)---> [ Resistor 1kΩ ] ---> [ Anodo (+) LED ]
-     |             |                                            |
-     |       GND --+---(Jumper)-------------------------------> [ Catodo (-) LED ]
-     +-------------+
+                         +-------------+
+                         |   ESP-32    |
+                         |             |
+                         |    GPIO32 --+---(Jumper)---> [ Resistor 1kΩ ] ---> [ Anodo (+) LED ]
+                         |             |                                            |
+                         |       GND --+---(Jumper)-------------------------------> [ Catodo (-) LED ]
+                         +-------------+
 
- 
-     +-------------+
+     
+     
+    
      ==================================================
               BOTÃO (PUSH-BUTTON)
      ==================================================
 
      1. Esquema Físico do Botão Táctil (4 Terminais):
-         Terminal 1 o-------o Terminal 2
-                    |       |
-                    |   +   |  <-- Pressionar fecha o contato interno
-                    |       |
-         Terminal 3 o-------o Terminal 4
+                        
+                        
+                        Terminal 1 o-------o Terminal 2
+                                   |       |
+                                   |   +   |  <-- Pressionar fecha o contato interno
+                                   |       |
+                        Terminal 3 o-------o Terminal 4
 
 
      2. Exemplo de Circuito de Botão com Pull-up Interno no ESP-32:
          
-         +----------------------------------+
-         |              ESP-32              |
-         |                                  |
-         |                     3V3 ---+     |
-         |                            |     |
-         |                          [10kΩ]  |  <-- Resistor de Pull-up (Opcional)
-         |                            |     |
-         |                 GPIO 23 ---+-----o (Terminal 1 do Botão)
-         |                            |     
-         |                            +-----o (Terminal 3 do Botão)
-         |                                  |
-         |                         GND -----+
-         +----------------------------------+
+                      
+                        +----------------------------------+
+                        |              ESP-32              |
+                        |                                  |
+                        |                     3V3 ---+     |
+                        |                            |     |
+                        |                          [10kΩ]  |  <-- Resistor de Pull-up (Opcional)
+                        |                            |     |
+                        |                 GPIO 23 ---+-----o (Terminal 1 do Botão)
+                        |                            |     
+                        |                            +-----o (Terminal 3 do Botão)
+                        |                                  |
+                        |                         GND -----+
+                        +----------------------------------+
      
 ---
 
