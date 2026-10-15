@@ -1,1 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERNET DAS COISAS COM ESP-32 - Prof. Georgino, Rodrigo (IoT)</title>
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #004080;
+            --accent-color: #ff9900;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+            --border-color: #e0e0e0;
+        }
 
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Menu Tipo Hambúrguer */
+        .navbar {
+            background-color: var(--secondary-color);
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 60px;
+            right: -100%;
+            width: 280px;
+            height: calc(100vh - 60px);
+            background-color: var(--card-bg);
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 999;
+        }
+
+        .nav-menu.active {
+            right: 0;
+        }
+
+        .nav-menu h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .nav-menu ol {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+
+        .nav-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.95em;
+            display: block;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 80px auto 20px auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        header h2 {
+            font-size: 1.3em;
+            margin: 0;
+            font-weight: 300;
+            color: #e0e0e0;
+        }
+
+        .author-badge {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+        }
+
+        .diagram-box {
+            background-color: #f0f4f8;
+            border: 1px dashed var(--primary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+        }
+
+        .info-box {
+            background-color: #e6f2ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #d63384;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            section {
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 1.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menu Tipo Hambúrguer Fixo -->
+    <nav class="navbar">
+        <div class="navbar-brand">Material Didático IoT - Prof. Georgino, Rodrigo</div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <div class="nav-menu" id="navMenu">
+        <h3>Sumário do Material Didático</h3>
+        <ol>
+            <li><a href="#sec1" class="menu-link">Introdução</a></li>
+            <li><a href="#sec2" class="menu-link">Conceitos Importantes</a></li>
+            <li><a href="#sec3" class="menu-link">Composição e Pinagem do ESP-32</a></li>
+            <li><a href="#sec4" class="menu-link">Baixando a IDE do Arduino</a></li>
+            <li><a href="#sec5" class="menu-link">Configurando o ESP-32</a></li>
+            <li><a href="#sec6" class="menu-link">Conhecendo o Blynk</a></li>
+            <li><a href="#sec7" class="menu-link">Sequencial de LEDs (D32, D26, D13)</a></li>
+            <li><a href="#sec8" class="menu-link">Ligando Lâmpada e Ventilador (Relé D4, D2)</a></li>
+            <li><a href="#sec9" class="menu-link">Monitoramento de Temperatura (DHT11 - D2)</a></li>
+            <li><a href="#sec10" class="menu-link">Alerta de Chuva (D13)</a></li>
+            <li><a href="#sec11" class="menu-link">Controlando Display LCD (D21, D22)</a></li>
+            <li><a href="#sec12" class="menu-link">Controle de Acesso com RFID (D2, D4, D5, D18)</a></li>
+            <li><a href="#sec13" class="menu-link">Irrigação Automática (D12, D13, D14)</a></li>
+            <li><a href="#sec14" class="menu-link">Finalização</a></li>
+        </ol>
+    </div>
+
+    <div class="container">
+
+        <header>
+            <h1>INTERNET DAS COISAS COM ESP-32</h1>
+            <h2>Guia Prático de Automação e Sistemas Embarcados</h2>
+            <div class="author-badge">Prof. Georgino, Rodrigo (IoT)</div>
+        </header>
+
+        <!-- CAPÍTULO 1 -->
+        <section id="sec1">
+            <h2>1. Introdução</h2>
+            <p>Este Material Didático foi desenvolvido pelo <strong>Prof. Georgino, Rodrigo (IoT)</strong> e destina-se aos <em>makers</em> iniciantes que querem aprender sobre Internet das Coisas (IoT) utilizando a placa ESP-32 de forma prática e divertida! Aqui você vai aprender como desenvolver projetos com os materiais disponíveis no Kit Internet das Coisas com ESP-32.</p>
+            <p>Além disso, será apresentado qual a função dos principais componentes, conceitos de eletrônica, elétrica e programação. Ao finalizar este e-book você será capaz de construir os seus próprios projetos!</p>
+
+            <div class="info-box">
+                <strong>Kit Internet das Coisas (IoT):</strong> Este é o kit ideal para o maker que está em busca de projetos de IoT e automação residencial. Com ele, você poderá fazer projetos para acionar lâmpadas por Wi-Fi, automatizar a irrigação de seu jardim, controlar relés pela internet e monitorar sua casa com dados de temperatura, umidade do solo, pressão atmosférica e chuva.
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 2 -->
+        <section id="sec2">
+            <h2>2. Conceitos Importantes</h2>
+            <p>Antes de darmos início em nossos projetos, é importante conhecer alguns conceitos que serão utilizados no decorrer do e-book.</p>
+
+            <h3>Internet of Things (IoT)</h3>
+            <p>Descreve objetos físicos incorporados a sensores, software e outras tecnologias com o objetivo de conectar e trocar dados com outros dispositivos e sistemas pela internet.</p>
+
+            <h3>O que é o ESP-32?</h3>
+            <p>É uma placa de desenvolvimento de código aberto que utiliza o chip ESP32. É muito semelhante ao Arduino Uno, visto que ambos são microcontroladores. A vantagem de se utilizar o ESP-32 é ele possuir Wi-Fi e Bluetooth nativos, sendo ideal para automação residencial. Possui pinos digitais e portas analógicas, permitindo inclusive programação via OTA (Over The Air) por Wi-Fi.</p>
+
+            <h3>Sinais Digitais e Analógicos</h3>
+            <ul>
+                <li><strong>Sinais Digitais:</strong> Possuem quantidade limitada de níveis (Alto ou Baixo), como lâmpadas, buzinas, ventiladores, chaves seletoras e botões.</li>
+                <li><strong>Sinais Analógicos:</strong> Podem assumir infinitos valores em um intervalo de tempo, como sensores de temperatura, umidade, pressão e potenciômetros.</li>
+            </ul>
+
+            <h3>Tensão e Corrente Elétrica</h3>
+            <p>A tensão elétrica (Diferença de Potencial, medida em Volts - V) é a força necessária para mover os elétrons e criar uma corrente elétrica. Pode ser Contínua (CC) ou Alternada (CA). A corrente elétrica (medida em Ampères - A) é o movimento ordenado de cargas elétricas. Relação regida pela Lei de Ohm: $U = R \times I$.</p>
+        </section>
+
+        <!-- CAPÍTULO 3 -->
+        <section id="sec3">
+            <h2>3. Composição e Pinagem do ESP-32</h2>
+            <p>Conhecer a disposição dos pinos (pinout) do ESP-32 DevKit v1 é fundamental para evitar ligações incorretas e danos ao microcontrolador.</p>
+
+            <div class="diagram-box">
+                       +-----------------------------------+
+                       |              ESP-32               |
+                 EN ---| [1]                           [1] |--- VP (GPIO36)
+            SENSOR_VP -| [2]                           [2] |--- VN (GPIO39)
+            SENSOR_VN -| [3]                           [3] |--- GPIO34
+               GPIO34 -| [4]                           [4] |--- GPIO35
+               GPIO35 -| [5]                           [5] |--- GPIO32
+               GPIO32 -| [6]                           [6] |--- GPIO33
+               GPIO33 -| [7]                           [7] |--- GPIO25
+               GPIO25 -| [8]                           [8] |--- GPIO26
+               GPIO26 -| [9]                           [9] |--- GPIO27
+               GPIO27 -| [10]                         [10] |--- GPIO14
+               GPIO14 -| [11]                         [11] |--- GPIO12
+               GPIO12 -| [12]                         [12] |--- GPIO13
+                  GND -| [13]                         [13] |--- GND
+                 3V3 -| [14]                         [14] |--- VIN (5V)
+                       +-----------------------------------+
+            </div>
+
+            <h3>Pinout Detalhado:</h3>
+            <ul>
+                <li><strong>GND:</strong> Pinos de referência Zero Volt (Terra).</li>
+                <li><strong>3V3:</strong> Saída do regulador interno de $3,3V$ (Corrente máxima recomendada: $250mA$).</li>
+                <li><strong>VIN:</strong> Entrada de alimentação externa ($5V$ a $9V$).</li>
+                <li><strong>GPIO (General Purpose Input/Output):</strong> Pinos digitais para entrada e saída de sinais. Nota: GPIOs 34, 35, 36 (VP) e 39 (VN) são exclusivamente de entrada (Input only).</li>
+                <li><strong>ADC (Analog to Digital Converter):</strong> Converte sinais analógicos externos ($0V$ a $3,3V$) em valores numéricos digitais de 12 bits ($0$ a $4095$).</li>
+            </ul>
+        </section>
+
+        <!-- CAPÍTULO 4 -->
+        <section id="sec4">
+            <h2>4. Baixando a IDE do Arduino</h2>
+            <p>Para programar a placa, utilizamos a IDE do Arduino:</p>
+            <ol>
+                <li>Acesse o site oficial do Arduino e clique em <strong>Software</strong>.</li>
+                <li>Selecione o seu sistema operacional (ex: <em>Windows Win 7 and newer</em>).</li>
+                <li>Clique em <em>Just Download</em> e execute o instalador clicando em <em>I Agree</em>, selecione os componentes e a pasta de destino até concluir.</li>
+            </ol>
+        </section>
+
+        <!-- CAPÍTULO 5 -->
+        <section id="sec5">
+            <h2>5. Configurando o ESP-32 na IDE</h2>
+            <ol>
+                <li>Abra a IDE do Arduino, clique em <strong>Arquivo</strong> e depois em <strong>Preferências</strong>.</li>
+                <li>No campo <em>URLs Adicionais para Gerenciadores de Placas</em>, insira: <code>https://dl.espressif.com/dl/package_esp32_index.json</code>.</li>
+                <li>Vá em <strong>Ferramentas &gt; Placa &gt; Gerenciador de Placas</strong>, pesquise por <code>esp32</code> da <em>Espressif Systems</em> e clique em <strong>Instalar</strong>.</li>
+                <li>Selecione a placa em <strong>Ferramentas &gt; Placa &gt; ESP32 Arduino &gt; ESP32 Dev Module</strong>.</li>
+            </ol>
+        </section>
+
+        <!-- CAPÍTULO 6 -->
+        <section id="sec6">
+            <h2>6. Conhecendo o Blynk</h2>
+            <p>O <strong>Blynk</strong> é um aplicativo focado em projetos IoT para comunicação via celular com o ESP-32 por Wi-Fi ou Bluetooth.</p>
+            <ul>
+                <li>Crie uma conta em <code>blynk.cloud</code> inserindo um e-mail válido.</li>
+                <li>Na IDE do Arduino, instale a biblioteca do Blynk (versão desenvolvida por <em>Volodymyr Shymanskyy</em>) indo em <strong>Sketch &gt; Incluir Biblioteca &gt; Gerenciar Bibliotecas</strong>.</li>
+            </ul>
+        </section>
+
+        <!-- CAPÍTULO 7 -->
+        <section id="sec7">
+            <h2>7. Projeto 1: Sequencial de LEDs</h2>
+            <p>Controlaremos três LEDs (Vermelho, Amarelo e Verde) utilizando o aplicativo Blynk via Wi-Fi.</p>
+            <ul>
+                <li><strong>LED Vermelho:</strong> Porta digital <strong>D32</strong> (com resistor de 1kΩ). Pino Virtual: <code>V0</code>.</li>
+                <li><strong>LED Amarelo:</strong> Porta digital <strong>D26</strong> (com resistor de 1kΩ). Pino Virtual: <code>V1</code>.</li>
+                <li><strong>LED Verde:</strong> Porta digital <strong>D13</strong> (com resistor de 1kΩ). Pino Virtual: <code>V2</code>.</li>
+            </ul>
+            <pre><code>#define BLYNK_PRINT Serial
+#define BLYNK_DEVICE_NAME "Prof Georgino Rodrigo IoT"
+#define BLYNK_TEMPLATE_ID "SEU_TEMPLATE_ID"
+#include &lt;WiFi.h&gt;
+#include &lt;WiFiClient.h&gt;
+#include &lt;BlynkSimpleEsp32.h&gt;
+
+char auth[] = "SEU_TOKEN";
+char ssid[] = "SUA_REDE";
+char pass[] = "SUA_SENHA";
+
+int LEDVermelho = 32;
+int LEDAmarelo = 26;
+int LEDVerde = 13;
+
+BLYNK_WRITE(V0) {
+  int valor = param.asInt();
+  digitalWrite(LEDVermelho, valor);
+}
+BLYNK_WRITE(V1) {
+  int valor = param.asInt();
+  digitalWrite(LEDAmarelo, valor);
+}
+BLYNK_WRITE(V2) {
+  int valor = param.asInt();
+  digitalWrite(LEDVerde, valor);
+}
+
+void setup() {
+  Serial.begin(115200);
+  Blynk.begin(auth, ssid, pass);
+  pinMode(LEDVermelho, OUTPUT);
+  pinMode(LEDAmarelo, OUTPUT);
+  pinMode(LEDVerde, OUTPUT);
+}
+
+void loop() {
+  Blynk.run();
+}</code></pre>
+        </section>
+
+        <!-- CAPÍTULO 8 -->
+        <section id="sec8">
+            <h2>8. Projeto 2: Ligando Lâmpada e Ventilador (Módulo Relé)</h2>
+            <p>Utiliza um Módulo Relé de 2 canais para acionar cargas de potência (lâmpada e ventilador).</p>
+            <ul>
+                <li><strong>VCC (Relé):</strong> Conectado ao pino <code>Vin</code> (5V).</li>
+                <li><strong>GND (Relé):</strong> Conectado ao <code>GND</code>.</li>
+                <li><strong>IN1 (Relé):</strong> Conectado ao pino digital <strong>D4</strong> (Lâmpada). Pino Virtual: <code>V1</code>.</li>
+                <li><strong>IN2 (Relé):</strong> Conectado ao pino digital <strong>D2</strong> (Ventilador). Pino Virtual: <code>V0</code>.</li>
+            </ul>
+            <pre><code>#define BLYNK_PRINT Serial
+#define BLYNK_DEVICE_NAME "Prof Georgino Rodrigo IoT"
+#define BLYNK_TEMPLATE_ID "SEU_TEMPLATE_ID"
+#include &lt;WiFi.h&gt;
+#include &lt;WiFiClient.h&gt;
+#include &lt;BlynkSimpleEsp32.h&gt;
+
+char auth[] = "SEU_TOKEN";
+char ssid[] = "SUA_REDE";
+char pass[] = "SUA_SENHA";
+
+int ventilador = 2;
+int lampada = 4;
+
+BLYNK_WRITE(V0) {
+  int valor = param.asInt();
+  digitalWrite(ventilador, valor);
+}
+BLYNK_WRITE(V1) {
+  int valor = param.asInt();
+  digitalWrite(lampada, valor);
+}
+
+void setup() {
+  Serial.begin(115200);
+  Blynk.begin(auth, ssid, pass);
+  pinMode(ventilador, OUTPUT);
+  pinMode(lampada, OUTPUT);
+}
+
+void loop() {
+  Blynk.run();
+}</code></pre>
+        </section>
+
+        <!-- CAPÍTULO 9 -->
+        <section id="sec9">
+            <h2>9. Projeto 3: Monitoramento de Temperatura e Umidade (DHT11)</h2>
+            <p>Monitora temperatura (0 a 50°C) e umidade (20 a 90%) com o sensor DHT11.</p>
+            <ul>
+                <li><strong>Pino 1 (DHT11):</strong> 3.3V</li>
+                <li><strong>Pino 2 (DHT11):</strong> D2 (Dados)</li>
+                <li><strong>Pino 4 (DHT11):</strong> GND</li>
+                <li><strong>Pinos Virtuais Blynk:</strong> <code>V0</code> (Umidade) e <code>V6</code> (Temperatura).</li>
+            </ul>
+            <pre><code>#define BLYNK_PRINT Serial
+#define BLYNK_TEMPLATE_ID "SEU_TEMPLATE_ID"
+#define BLYNK_DEVICE_NAME "Prof Georgino Rodrigo IoT"
+#include &lt;WiFi.h&gt;
+#include &lt;WiFiClient.h&gt;
+#include &lt;BlynkSimpleEsp32.h&gt;
+#include &lt;DHT.h&gt;
+
+char auth[] = "SEU_TOKEN";
+char ssid[] = "SUA_REDE";
+char pass[] = "SUA_SENHA";
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+BlynkTimer timer;
+
+void sendSensor() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  if (isnan(h) || isnan(t)) return;
+  Blynk.virtualWrite(V0, h);
+  Blynk.virtualWrite(V6, t);
+}
+
+void setup() {
+  Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass);
+  dht.begin();
+  timer.setInterval(1000L, sendSensor);
+}
+
+void loop() {
+  Blynk.run();
+  timer.run();
+}</code></pre>
+        </section>
+
+        <!-- CAPÍTULO 10 -->
+        <section id="sec10">
+            <h2>10. Alerta de Chuva</h2>
+            <p>Utiliza um módulo sensor de chuva para enviar alertas de notificação ao celular quando começar a chover.</p>
+            <ul>
+                <li><strong>Pino Digital Sensor (DO):</strong> Conectado ao pino <strong>D13</strong> do ESP-32.</li>
+                <li><strong>Pino Virtual Blynk:</strong> <code>VO</code>.</li>
+            </ul>
+        </section>
+
+        <!-- CAPÍTULO 11 -->
+        <section id="sec11">
+            <h2>11. Controlando Display LCD</h2>
+            <p>Exibe textos personalizados utilizando um display LCD 16x2 com módulo I2C integrado.</p>
+            <ul>
+                <li><strong>GND:</strong> Pino G | <strong>VCC:</strong> Vin</li>
+                <li><strong>SDA:</strong> D21 | <strong>SCL:</strong> D22</li>
+            </ul>
+        </section>
+
+        <!-- CAPÍTULO 12 -->
+        <section id="sec12">
+            <h2>12. Controle de Acesso com RFID</h2>
+            <p>Sistema de segurança por leitura de tags RFID (13,56MHz), acionando buzzer e display.</p>
+            <ul>
+                <li><strong>SDA (SS):</strong> D2 | <strong>SCK:</strong> D4 | <strong>MOSI:</strong> D5 | <strong>MISO:</strong> D18 | <strong>RST:</strong> D22 | <strong>Buzzer:</strong> D8.</li>
+            </ul>
+        </section>
+
+        <!-- CAPÍTULO 13 -->
+        <section id="sec13">
+            <h2>13. Irrigação Automática</h2>
+            <p>Sistema inteligente combinando sensor de umidade de solo (FC-28) e mini bomba de água acionada por relé.</p>
+            <ul>
+                <li><strong>Sensor de Solo (Digital):</strong> Conectado ao pino <strong>D12</strong>.</li>
+                <li><strong>Sensor de Solo (Analógico via divisores):</strong> Conectado ao pino <strong>13</strong>.</li>
+                <li><strong>Relé da Bomba:</strong> Conectado ao pino digital <strong>D14</strong>.</li>
+            </ul>
+        </section>
+
+        <!-- CAPÍTULO 14 -->
+        <section id="sec14">
+            <h2>14. Finalização</h2>
+            <p>Este material abordou a introdução à Internet das Coisas para iniciantes utilizando o ESP-32. Desenvolvido e adaptado sob a supervisão do <strong>Prof. Georgino, Rodrigo (IoT)</strong>.</p>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Prof. Georgino, Rodrigo (IoT). Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Script para funcionamento do Menu Hambúrguer -->
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        const menuLinks = document.querySelectorAll('.menu-link');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+
+</body>
+</html>
